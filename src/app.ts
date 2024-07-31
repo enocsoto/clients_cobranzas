@@ -1,16 +1,40 @@
-import express from 'express'
+import 'dotenv/config'
+import "reflect-metadata"
+import express, { Application } from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
-import userRoutes from './routes/userRoutes'
-import paymentRoutes from './routes/paymentRoutes'
+import { AppDataSource } from "./config/connection"
+import { routerPayments, routerUser } from './routes'
+export class Main {
+  private app: Application;
+  private port: string;
 
-const app = express()
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || '3000';
+    this.db();
+    this.middlewares();
+    this.routes;
+  }
+  async db() {
+    await AppDataSource.initialize();
+    console.log('Database connection established successfully')
+  }
 
-//use express
-app.use(morgan('dev'))
-app.use(cors())
-app.use(express.json())
-app.use('/api/clients', userRoutes)
-app.use('/api/payments', paymentRoutes)
+  routes() {
+    this.app.use('/api/user', routerUser)
+    this.app.use('/api/payment', routerPayments)
+  }
 
-export default app;
+  middlewares() {
+    this.app.use(express.json())
+    this.app.use(morgan('dev'))
+    this.app.use(cors())
+  }
+  listen() {
+    this.app.listen(this.port, () => {
+      console.log(`Server running on port ${this.port}`)
+    })
+  }
+}
+

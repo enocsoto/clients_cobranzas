@@ -1,8 +1,8 @@
 import express from 'express';
 
-const router = express.Router();
+const routerPayments = express.Router();
 
-router
+routerPayments
   .get('/payment', (_req, res) => {
     res.send('Return all payments');
   })
@@ -14,4 +14,4 @@ router
     res.send('Calculate interest');
   })
 
-export default router;
+export { routerPayments };

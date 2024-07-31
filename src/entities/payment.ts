@@ -3,8 +3,8 @@ import { User } from "./user";
 
 @Entity()
 export class Payment extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   capital: number;
