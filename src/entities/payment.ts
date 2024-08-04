@@ -1,29 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity } from "typeorm";
-import { User } from "./user";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, OneToMany, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
+import { Client } from "./client";
+import { LoanStatus } from "./loanStatus";
+import { Installment } from "./Installment";
 
 @Entity()
 export class Payment extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  capital: number;
+  @ManyToOne(() => Client, (client) => client.loans)
+  client: Client;
+
+  @ManyToOne(() => LoanStatus)
+  loanStatus: LoanStatus;
 
   @Column()
-  interest: number;
+  amount: number;
 
   @Column()
-  months: number;
+  date: Date;
 
-  @Column()
-  datePayment: Date;
+  @OneToMany(() => Installment, (installment) => installment.payment)
+  installments: Installment[];
 
-  @Column()
-  totalPayment: number;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column()
-  status: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-  @ManyToOne(() => User, user => user.payments)
-  userId: User;
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

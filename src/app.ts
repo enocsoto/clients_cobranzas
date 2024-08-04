@@ -4,7 +4,7 @@ import express, { Application } from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import { AppDataSource } from "./config/connection"
-import { routerPayments, routerUser } from './routes'
+import { routerPayments, routerClient } from './routes'
 export class Main {
   private app: Application;
   private port: string;
@@ -14,7 +14,7 @@ export class Main {
     this.port = process.env.PORT || '3000';
     this.db();
     this.middlewares();
-    this.routes;
+    this.routes();
   }
   async db() {
     await AppDataSource.initialize();
@@ -22,13 +22,13 @@ export class Main {
   }
 
   routes() {
-    this.app.use('/api/user', routerUser)
+    this.app.use('/api/client', routerClient)
     this.app.use('/api/payment', routerPayments)
   }
 
   middlewares() {
     this.app.use(express.json())
-    this.app.use(morgan('dev'))
+    this.app.use(morgan('tiny'))
     this.app.use(cors())
   }
   listen() {
